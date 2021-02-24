@@ -151,7 +151,7 @@ resource "aws_cloudfront_distribution" "default" {
     compress         = var.compress
     # cache_policy_id = aws_cloudfront_cache_policy.default.id
 
-    forwarded_values {}
+    # forwarded_values {}
     # forwarded_values {
     #   headers = var.forward_headers
 
