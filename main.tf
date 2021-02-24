@@ -98,7 +98,8 @@ resource "aws_cloudfront_distribution" "default" {
       headers = var.forward_headers
 
       query_string = var.forward_query_string
-
+      query_string_cache_keys = var.default_query_string_cache_keys
+      
       cookies {
         forward           = var.forward_cookies
         whitelisted_names = var.forward_cookies_whitelisted_names

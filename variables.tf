@@ -242,3 +242,7 @@ variable "cache_behavior" {
   default     = []
 }
 
+variable "default_query_string_cache_keys" {
+  type = list(string)
+  default = []
+}
