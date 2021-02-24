@@ -128,18 +128,18 @@ resource "aws_cloudfront_distribution" "default" {
     target_origin_id = module.distribution_label.id
     compress         = var.compress
     cache_policy_id = aws_cloudfront_cache_policy.default.id
-    
-    forwarded_values {
-      headers = var.forward_headers
 
-      query_string = var.forward_query_string
-      query_string_cache_keys = var.default_query_string_cache_keys
+    # forwarded_values {
+    #   headers = var.forward_headers
+
+    #   query_string = var.forward_query_string
+    #   query_string_cache_keys = var.default_query_string_cache_keys
       
-      cookies {
-        forward           = var.forward_cookies
-        whitelisted_names = var.forward_cookies_whitelisted_names
-      }
-    }
+    #   cookies {
+    #     forward           = var.forward_cookies
+    #     whitelisted_names = var.forward_cookies_whitelisted_names
+    #   }
+    # }
 
     viewer_protocol_policy = var.viewer_protocol_policy
     default_ttl            = var.default_ttl
