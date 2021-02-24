@@ -39,22 +39,13 @@ module "distribution_label" {
 resource "aws_cloudfront_origin_request_policy" "default" {
   name    = "${module.distribution_label.id}-default-request-policy"
   cookies_config {
-    cookie_behavior = "whitelist"
-    cookies {
-      items = var.forward_cookies_whitelisted_names
-    }
+    cookie_behavior = "none"
   }
   headers_config {
-    header_behavior = "whitelist"
-    headers {
-      items = var.forward_headers
-    }
+    header_behavior = "none"
   }
   query_strings_config {
-    query_string_behavior = "whitelist"
-    query_strings {
-      items = var.default_query_string_cache_keys
-    }
+    query_string_behavior = "none"
   }
 }
 
@@ -143,6 +134,8 @@ resource "aws_cloudfront_distribution" "default" {
     minimum_protocol_version       = var.viewer_minimum_protocol_version
     cloudfront_default_certificate = var.acm_certificate_arn == "" ? true : false
   }
+  
+  # origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
 
   default_cache_behavior {
     allowed_methods  = var.allowed_methods
