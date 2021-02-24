@@ -36,6 +36,28 @@ module "distribution_label" {
   tags       = var.tags
 }
 
+resource "aws_cloudfront_origin_request_policy" "default" {
+  name    = "${module.distribution_label.id}-default-request-policy"
+  cookies_config {
+    cookie_behavior = "whitelist"
+    cookies {
+      items = var.forward_cookies_whitelisted_names
+    }
+  }
+  headers_config {
+    header_behavior = "whitelist"
+    headers {
+      items = var.forward_headers
+    }
+  }
+  query_strings_config {
+    query_string_behavior = "whitelist"
+    query_strings {
+      items = var.default_query_string_cache_keys
+    }
+  }
+}
+
 resource "aws_cloudfront_cache_policy" "default" {
   name    = "${module.distribution_label.id}-default-cache-policy"
 
