@@ -142,7 +142,8 @@ resource "aws_cloudfront_distribution" "default" {
     cached_methods   = var.cached_methods
     target_origin_id = module.distribution_label.id
     compress         = var.compress
-    # cache_policy_id = aws_cloudfront_cache_policy.default.id
+    cache_policy_id = aws_cloudfront_cache_policy.default.id
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
 
     # forwarded_values {}
     # forwarded_values {
