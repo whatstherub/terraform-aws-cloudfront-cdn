@@ -36,6 +36,40 @@ module "distribution_label" {
   tags       = var.tags
 }
 
+resource "aws_cloudfront_cache_policy" "default" {
+  name    = "${module.distribution_label.id}-default-cache-policy"
+
+  min_ttl     = 0
+  default_ttl = 0
+  max_ttl     = 31536000
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "whitelist"
+      cookies {
+        items = var.forward_cookies_whitelisted_names
+      }
+    }
+
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = var.forward_headers
+      }
+    }
+
+    query_strings_config {
+      query_string_behavior = "whitelist"
+      query_strings {
+        items = var.default_query_string_cache_keys
+      }
+    }
+
+    enable_accept_encoding_gzip   = true
+    enable_accept_encoding_brotli = true
+  }
+}
+
 resource "aws_cloudfront_distribution" "default" {
   enabled             = var.enabled
   is_ipv6_enabled     = var.is_ipv6_enabled
@@ -93,7 +127,8 @@ resource "aws_cloudfront_distribution" "default" {
     cached_methods   = var.cached_methods
     target_origin_id = module.distribution_label.id
     compress         = var.compress
-
+    cache_policy_id = aws_cloudfront_cache_policy.default.id
+    
     forwarded_values {
       headers = var.forward_headers
 
