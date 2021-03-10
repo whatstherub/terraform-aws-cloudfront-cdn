@@ -133,7 +133,7 @@ resource "aws_cloudfront_distribution" "default" {
     
     content {
       domain_name = origin.value["domain_name"]
-      origin_id   = origin.value["origin_id"]
+      origin_id   = "${module.distribution_label.id}-${origin.value["origin_id"]}"
       origin_path = lookup(origin.value, "origin_path", null)
 
       custom_origin_config {
