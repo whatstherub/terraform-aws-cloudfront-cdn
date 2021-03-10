@@ -172,7 +172,7 @@ resource "aws_cloudfront_distribution" "default" {
       cached_methods            = ordered_cache_behavior.value["cached_methods"]
       path_pattern              = ordered_cache_behavior.value["path_pattern"]
       target_origin_id          = ordered_cache_behavior.value["target_origin_id"]
-      viewer_protocol_policy    = lookup(ordered_cache_behavior.value, "viewer_protocol_policy", "redirect-https")
+      viewer_protocol_policy    = lookup(ordered_cache_behavior.value, "viewer_protocol_policy", "redirect-to-https")
 
       cache_policy_id = lookup(ordered_cache_behavior.value, "cache_policy_id", null)
       origin_request_policy_id = lookup(ordered_cache_behavior.value, "request_policy_id", null)
