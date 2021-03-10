@@ -132,8 +132,8 @@ resource "aws_cloudfront_distribution" "default" {
     for_each = var.secondary_origins
     
     content {
-      domain_name = origin.value.domain_name
-      origin_id   = origin.value.origin_id
+      domain_name = origin.value["domain_name"]
+      origin_id   = origin.value["origin_id"]
       origin_path = lookup(origin.value, "origin_path", null)
 
       custom_origin_config {
