@@ -131,17 +131,19 @@ resource "aws_cloudfront_distribution" "default" {
   dynamic "origin" {
     for_each = var.secondary_origins
     
-    domain_name = origin.value.domain_name
-    origin_id   = origin.value.origin_id
-    origin_path = lookup(origin.value, "origin_path", null)
+    content {
+      domain_name = origin.value.domain_name
+      origin_id   = origin.value.origin_id
+      origin_path = lookup(origin.value, "origin_path", null)
 
-    custom_origin_config {
-      http_port                = lookup(origin.value, "http_port", 80)
-      https_port               = lookup(origin.value, "https_port", 443)
-      origin_protocol_policy   = lookup(origin.value, "origin_protocol_policy", "https-only")
-      origin_ssl_protocols     = origin.value.ssl_protocols
-      origin_keepalive_timeout = lookup(origin.value, "keepalive_timeout", null)
-      origin_read_timeout      = lookup(origin.value, "read_timeout", null)
+      custom_origin_config {
+        http_port                = lookup(origin.value, "http_port", 80)
+        https_port               = lookup(origin.value, "https_port", 443)
+        origin_protocol_policy   = lookup(origin.value, "origin_protocol_policy", "https-only")
+        origin_ssl_protocols     = origin.value.ssl_protocols
+        origin_keepalive_timeout = lookup(origin.value, "keepalive_timeout", null)
+        origin_read_timeout      = lookup(origin.value, "read_timeout", null)
+      }
     }
   }
 
