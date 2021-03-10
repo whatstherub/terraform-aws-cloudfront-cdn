@@ -252,13 +252,11 @@ variable "secondary_origins" {
     origin_id = string
     domain_name = string
     origin_path = string
-    custom_origin_config = object({
-      http_port         = number
-      https_port        = number
-      protocol_policy   = string
-      ssl_protocols     = list(string)
-      keepalive_timeout = number
-      read_timeout      = number
-    })
+    http_port         = number
+    https_port        = number
+    protocol_policy   = string
+    ssl_protocols     = list(string)
+    keepalive_timeout = number
+    read_timeout      = number
   }))
 }
