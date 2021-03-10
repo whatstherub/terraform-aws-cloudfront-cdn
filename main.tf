@@ -128,6 +128,23 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
+  dynamic "origin" {
+    for_each = var.secondary_origins
+    
+    domain_name = origin.value.domain_name
+    origin_id   = origin.value.origin_id
+    origin_path = lookup(origin.value, "origin_path", null)
+
+    custom_origin_config {
+      http_port                = lookup(origin.value, "http_port", 80)
+      https_port               = lookup(origin.value, "https_port", 443)
+      origin_protocol_policy   = lookup(origin.value, "origin_protocol_policy", "https-only")
+      origin_ssl_protocols     = origin.value.ssl_protocols
+      origin_keepalive_timeout = lookup(origin.value, "keepalive_timeout", null)
+      origin_read_timeout      = lookup(origin.value, "read_timeout", null)
+    }
+  }
+
   viewer_certificate {
     acm_certificate_arn            = var.acm_certificate_arn
     ssl_support_method             = "sni-only"
@@ -135,8 +152,6 @@ resource "aws_cloudfront_distribution" "default" {
     cloudfront_default_certificate = var.acm_certificate_arn == "" ? true : false
   }
   
-  # origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
-
   default_cache_behavior {
     allowed_methods  = var.allowed_methods
     cached_methods   = var.cached_methods
@@ -145,33 +160,12 @@ resource "aws_cloudfront_distribution" "default" {
     cache_policy_id = aws_cloudfront_cache_policy.default.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
 
-    # forwarded_values {}
-    # forwarded_values {
-    #   headers = var.forward_headers
-
-    #   query_string = var.forward_query_string
-    #   query_string_cache_keys = var.default_query_string_cache_keys
-      
-    #   cookies {
-    #     forward           = var.forward_cookies
-    #     whitelisted_names = var.forward_cookies_whitelisted_names
-    #   }
-    # }
-
     viewer_protocol_policy = var.viewer_protocol_policy
-    # default_ttl            = var.default_ttl
-    # min_ttl                = var.min_ttl
-    # max_ttl                = var.max_ttl
   }
 
   dynamic "ordered_cache_behavior" {
     for_each = var.cache_behavior
     content {
-      # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-      # which keys might be set in maps assigned here, so it has
-      # produced a comprehensive set here. Consider simplifying
-      # this after confirming which keys can be set in practice.
-
       allowed_methods           = ordered_cache_behavior.value.allowed_methods
       cached_methods            = ordered_cache_behavior.value.cached_methods
       compress                  = lookup(ordered_cache_behavior.value, "compress", null)

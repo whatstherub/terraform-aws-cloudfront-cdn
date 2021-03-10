@@ -246,3 +246,19 @@ variable "default_query_string_cache_keys" {
   type = list(string)
   default = []
 }
+
+variable "secondary_origins" {
+  type = list(object({
+    origin_id = string
+    domain_name = string
+    origin_path = string
+    custom_origin_config = object({
+      http_port         = number
+      https_port        = number
+      protocol_policy   = string
+      ssl_protocols     = list(string)
+      keepalive_timeout = number
+      read_timeout      = number
+    })
+  }))
+}
