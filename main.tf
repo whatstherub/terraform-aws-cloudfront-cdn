@@ -170,10 +170,6 @@ resource "aws_cloudfront_distribution" "default" {
     content {
       allowed_methods           = ordered_cache_behavior.value["allowed_methods"]
       cached_methods            = ordered_cache_behavior.value["cached_methods"]
-      compress                  = lookup(ordered_cache_behavior.value, "compress", null)
-      default_ttl               = lookup(ordered_cache_behavior.value, "default_ttl", null)
-      max_ttl                   = lookup(ordered_cache_behavior.value, "max_ttl", null)
-      min_ttl                   = lookup(ordered_cache_behavior.value, "min_ttl", null)
       path_pattern              = ordered_cache_behavior.value["path_pattern"]
       target_origin_id          = ordered_cache_behavior.value["target_origin_id"]
       viewer_protocol_policy    = ordered_cache_behavior.value["viewer_protocol_policy"]

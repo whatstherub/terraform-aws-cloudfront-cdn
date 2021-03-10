@@ -237,7 +237,14 @@ variable "parent_zone_name" {
 }
 
 variable "cache_behavior" {
-  type        = list(string)
+  type        = list(object({
+    cached_methods = list(string)
+    allowed_methods = list(string)
+    cache_policy_id = string
+    origin_request_policy_id = string
+    path_pattern = string
+    target_origin_id = string
+  }))
   description = "An ordered list of cache behaviors resource for this distribution. List from top to bottom in order of precedence. The topmost cache behavior will have precedence 0."
   default     = []
 }
