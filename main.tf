@@ -168,35 +168,18 @@ resource "aws_cloudfront_distribution" "default" {
   dynamic "ordered_cache_behavior" {
     for_each = var.cache_behavior
     content {
-      allowed_methods           = ordered_cache_behavior.value.allowed_methods
-      cached_methods            = ordered_cache_behavior.value.cached_methods
+      allowed_methods           = ordered_cache_behavior.value["allowed_methods"]
+      cached_methods            = ordered_cache_behavior.value["cached_methods"]
       compress                  = lookup(ordered_cache_behavior.value, "compress", null)
       default_ttl               = lookup(ordered_cache_behavior.value, "default_ttl", null)
-      field_level_encryption_id = lookup(ordered_cache_behavior.value, "field_level_encryption_id", null)
       max_ttl                   = lookup(ordered_cache_behavior.value, "max_ttl", null)
       min_ttl                   = lookup(ordered_cache_behavior.value, "min_ttl", null)
-      path_pattern              = ordered_cache_behavior.value.path_pattern
-      smooth_streaming          = lookup(ordered_cache_behavior.value, "smooth_streaming", null)
-      target_origin_id          = ordered_cache_behavior.value.target_origin_id
-      trusted_signers           = lookup(ordered_cache_behavior.value, "trusted_signers", null)
-      viewer_protocol_policy    = ordered_cache_behavior.value.viewer_protocol_policy
+      path_pattern              = ordered_cache_behavior.value["path_pattern"]
+      target_origin_id          = ordered_cache_behavior.value["target_origin_id"]
+      viewer_protocol_policy    = ordered_cache_behavior.value["viewer_protocol_policy"]
 
-      dynamic "forwarded_values" {
-        for_each = lookup(ordered_cache_behavior.value, "forwarded_values", [])
-        content {
-          headers                 = lookup(forwarded_values.value, "headers", null)
-          query_string            = forwarded_values.value.query_string
-          query_string_cache_keys = lookup(forwarded_values.value, "query_string_cache_keys", null)
-
-          dynamic "cookies" {
-            for_each = lookup(forwarded_values.value, "cookies", [])
-            content {
-              forward           = cookies.value.forward
-              whitelisted_names = lookup(cookies.value, "whitelisted_names", null)
-            }
-          }
-        }
-      }
+      cache_policy_id = lookup(ordered_cache_behavior.value, "cache_policy_id", null)
+      origin_request_policy_id = lookup(ordered_cache_behavior.value, "request_policy_id", null)
 
       dynamic "lambda_function_association" {
         for_each = lookup(ordered_cache_behavior.value, "lambda_function_association", [])
